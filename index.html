@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universul Matematicii - Calculator</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #121212;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            color: white;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        
+        .header h1 {
+            font-style: italic;
+            font-size: 2.5rem;
+            color: #e63946;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            color: #aaa;
+            margin-bottom: 20px;
+        }
+        
+        .math-image {
+            display: block;
+            margin: 20px auto;
+            max-width: 800px;
+            width: 100%;
+            height: auto;
+            border-radius: 50%;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        
+        .calculator-title, .tests-title, .registration-title {
+            text-align: center;
+            font-size: 2rem;
+            color: #3a7ca5;
+            margin: 30px 0 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .calculator-container, .tests-container, .registration-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            margin: 20px 0;
+        }
+        
+        .calculator, .test, .registration-category {
+            background-color: #1e1e1e;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            width: 320px;
+            border: 1px solid #333;
+            margin-bottom: 30px;
+        }
+        
+        .display {
+            background-color: #252525;
+            color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: right;
+            font-size: 28px;
+            min-height: 40px;
+            word-wrap: break-word;
+            border: 1px solid #444;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+        
+        button {
+            padding: 18px;
+            font-size: 20px;
+            border: none;
+            border-radius: 8px;
+            background-color: #333;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: bold;
+        }
+        
+        button:hover {
+            background-color: #444;
+            transform: translateY(-2px);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        button.operator {
+            background-color: #e63946;
+        }
+        
+        button.operator:hover {
+            background-color: #f0505a;
+        }
+        
+        button.clear {
+            background-color: #3a7ca5;
+        }
+        
+        button.clear:hover {
+            background-color: #4a8cb5;
+        }
+        
+        button.equals {
+            background-color: #2a9d8f;
+        }
+        
+        button.equals:hover {
+            background-color: #34b4a4;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            color: #666;
+            text-align: center;
+            font-size: 0.9rem;
+            width: 100%;
+        }
+        
+        /* Test styles */
+        .test h3 {
+            color: #e63946;
+            margin-top: 0;
+            text-align: center;
+        }
+        
+        .question {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #333;
+        }
+        
+        .question:last-child {
+            border-bottom: none;
+        }
+        
+        .question p {
+            margin-bottom: 10px;
+        }
+        
+        .options label {
+            display: block;
+            margin-bottom: 8px;
+            padding: 8px;
+            background-color: #252525;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .options label:hover {
+            background-color: #333;
+        }
+        
+        .options input {
+            margin-right: 10px;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #3a7ca5;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+        
+        .submit-btn:hover {
+            background-color: #4a8cb5;
+        }
+        
+        .feedback {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .correct {
+            background-color: #2a9d8f;
+        }
+        
+        .incorrect {
+            background-color: #e63946;
+        }
+        
+        .test-results {
+            margin-top: 15px;
+            font-weight: bold;
+            text-align: center;
+            display: none;
+        }
+        
+        /* Registration styles */
+        .registration-category h3 {
+            color: #e63946;
+            margin-top: 0;
+            text-align: center;
+            border-bottom: 2px solid #3a7ca5;
+            padding-bottom: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #aaa;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #444;
+            background-color: #252525;
+            color: white;
+        }
+        
+        .register-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #2a9d8f;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        
+        .register-btn:hover {
+            background-color: #34b4a4;
+        }
+        
+        .category-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .category-tab {
+            padding: 10px 20px;
+            margin: 0 5px;
+            background-color: #252525;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .category-tab:hover, .category-tab.active {
+            background-color: #3a7ca5;
+        }
+        
+        @media (max-width: 768px) {
+            .category-tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .category-tab {
+                margin: 5px 0;
+                width: 80%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><i>Universul Matematicii</i></h1>
+        <p>Matematica devine simplă – învață cu noi, în fiecare pas!</p>
+        <img class="math-image" src="mat.jpg" alt="Ilustrație matematică">
+    </div>
+    
+    <h2 class="calculator-title">Calculator</h2>
+    
+    <div class="calculator-container">
+        <div class="calculator">
+            <div class="display" id="display">0</div>
+            <div class="buttons">
+                <button onclick="clearDisplay()" class="clear">C</button>
+                <button onclick="appendToDisplay('(')">(</button>
+                <button onclick="appendToDisplay(')')">)</button>
+                <button onclick="appendToDisplay('/')" class="operator">/</button>
+                
+                <button onclick="appendToDisplay('7')">7</button>
+                <button onclick="appendToDisplay('8')">8</button>
+                <button onclick="appendToDisplay('9')">9</button>
+                <button onclick="appendToDisplay('*')" class="operator">×</button>
+                
+                <button onclick="appendToDisplay('4')">4</button>
+                <button onclick="appendToDisplay('5')">5</button>
+                <button onclick="appendToDisplay('6')">6</button>
+                <button onclick="appendToDisplay('-')" class="operator">-</button>
+                
+                <button onclick="appendToDisplay('1')">1</button>
+                <button onclick="appendToDisplay('2')">2</button>
+                <button onclick="appendToDisplay('3')">3</button>
+                <button onclick="appendToDisplay('+')" class="operator">+</button>
+                
+                <button onclick="appendToDisplay('0')">0</button>
+                <button onclick="appendToDisplay('.')">.</button>
+                <button onclick="backspace()">←</button>
+                <button onclick="calculate()" class="operator equals">=</button>
+            </div>
+        </div>
+    </div>
+    
+    <h2 class="tests-title">Teste Recapitulative Clasa a 7-a</h2>
+    
+    <div class="tests-container">
+        <!-- Test 1 - Algebra -->
+        <div class="test" id="test1">
+            <h3>Test 1: Algebră</h3>
+            <div class="question">
+                <p>1. Care este rezultatul calcului: 2x + 3x - x, pentru x = 4?</p>
+                <div class="options">
+                    <label><input type="radio" name="q1" value="a"> a) 12</label>
+                    <label><input type="radio" name="q1" value="b"> b) 16</label>
+                    <label><input type="radio" name="q1" value="c"> c) 20</label>
+                    <label><input type="radio" name="q1" value="d"> d) 24</label>
+                </div>
+                <div class="feedback" id="feedback1"></div>
+            </div>
+            
+            <div class="question">
+                <p>2. Care este soluția ecuației: 3(x - 2) = 15?</p>
+                <div class="options">
+                    <label><input type="radio" name="q2" value="a"> a) x = 3</label>
+                    <label><input type="radio" name="q2" value="b"> b) x = 5</label>
+                    <label><input type="radio" name="q2" value="c"> c) x = 7</label>
+                    <label><input type="radio" name="q2" value="d"> d) x = 9</label>
+                </div>
+                <div class="feedback" id="feedback2"></div>
+            </div>
+            
+            <div class="question">
+                <p>3. Care este forma simplificată a expresiei: 2(3x - 5) + 4x?</p>
+                <div class="options">
+                    <label><input type="radio" name="q3" value="a"> a) 10x - 10</label>
+                    <label><input type="radio" name="q3" value="b"> b) 6x - 10 + 4x</label>
+                    <label><input type="radio" name="q3" value="c"> c) 10x - 5</label>
+                    <label><input type="radio" name="q3" value="d"> d) 6x - 5 + 4x</label>
+                </div>
+                <div class="feedback" id="feedback3"></div>
+            </div>
+            
+            <button class="submit-btn" onclick="checkTest1()">Verifică Răspunsurile</button>
+            <div class="test-results" id="results1"></div>
+        </div>
+        
+        <!-- Test 2 - Geometrie -->
+        <div class="test" id="test2">
+            <h3>Test 2: Geometrie</h3>
+            <div class="question">
+                <p>1. Care este aria unui pătrat cu latura de 5 cm?</p>
+                <div class="options">
+                    <label><input type="radio" name="q4" value="a"> a) 10 cm²</label>
+                    <label><input type="radio" name="q4" value="b"> b) 20 cm²</label>
+                    <label><input type="radio" name="q4" value="c"> c) 25 cm²</label>
+                    <label><input type="radio" name="q4" value="d"> d) 30 cm²</label>
+                </div>
+                <div class="feedback" id="feedback4"></div>
+            </div>
+            
+            <div class="question">
+                <p>2. Un triunghi dreptunghic are catetele de 3 cm și 4 cm. Care este ipotenuza?</p>
+                <div class="options">
+                    <label><input type="radio" name="q5" value="a"> a) 5 cm</label>
+                    <label><input type="radio" name="q5" value="b"> b) 6 cm</label>
+                    <label><input type="radio" name="q5" value="c"> c) 7 cm</label>
+                    <label><input type="radio" name="q5" value="d"> d) 8 cm</label>
+                </div>
+                <div class="feedback" id="feedback5"></div>
+            </div>
+            
+            <div class="question">
+                <p>3. Care este volumul unui cub cu muchia de 3 cm?</p>
+                <div class="options">
+                    <label><input type="radio" name="q6" value="a"> a) 9 cm³</label>
+                    <label><input type="radio" name="q6" value="b"> b) 18 cm³</label>
+                    <label><input type="radio" name="q6" value="c"> c) 27 cm³</label>
+                    <label><input type="radio" name="q6" value="d"> d) 36 cm³</label>
+                </div>
+                <div class="feedback" id="feedback6"></div>
+            </div>
+            
+            <button class="submit-btn" onclick="checkTest2()">Verifică Răspunsurile</button>
+            <div class="test-results" id="results2"></div>
+        </div>
+        
+        <!-- Test 3 - Aritmetica -->
+        <div class="test" id="test3">
+            <h3>Test 3: Aritmetică</h3>
+            <div class="question">
+                <p>1. Care este rezultatul calcului: 15% din 200?</p>
+                <div class="options">
+                    <label><input type="radio" name="q7" value="a"> a) 15</label>
+                    <label><input type="radio" name="q7" value="b"> b) 20</label>
+                    <label><input type="radio" name="q7" value="c"> c) 30</label>
+                    <label><input type="radio" name="q7" value="d"> d) 45</label>
+                </div>
+                <div class="feedback" id="feedback7"></div>
+            </div>
+            
+            <div class="question">
+                <p>2. Care este cel mai mare divizor comun al numerelor 24 și 36?</p>
+                <div class="options">
+                    <label><input type="radio" name="q8" value="a"> a) 6</label>
+                    <label><input type="radio" name="q8" value="b"> b) 8</label>
+                    <label><input type="radio" name="q8" value="c"> c) 12</label>
+                    <label><input type="radio" name="q8" value="d"> d) 24</label>
+                </div>
+                <div class="feedback" id="feedback8"></div>
+            </div>
+            
+            <div class="question">
+                <p>3. Dacă a = -3 și b = 5, care este valoarea expresiei 2a - b?</p>
+                <div class="options">
+                    <label><input type="radio" name="q9" value="a"> a) -11</label>
+                    <label><input type="radio" name="q9" value="b"> b) -1</label>
+                    <label><input type="radio" name="q9" value="c"> c) 1</label>
+                    <label><input type="radio" name="q9" value="d"> d) 11</label>
+                </div>
+                <div class="feedback" id="feedback9"></div>
+            </div>
+            
+            <button class="submit-btn" onclick="checkTest3()">Verifică Răspunsurile</button>
+            <div class="test-results" id="results3"></div>
+        </div>
+    </div>
+    
+    <h2 class="registration-title">Înscrieri Cursuri</h2>
+    
+    <div class="registration-container">
+        <div class="category-tabs">
+            <div class="category-tab active" onclick="showCategory('beginner')">Începători</div>
+            <div class="category-tab" onclick="showCategory('intermediate')">Intermediari</div>
+            <div class="category-tab" onclick="showCategory('advanced')">Avansați</div>
+            <div class="category-tab" onclick="showCategory('olympiad')">Olimpiade</div>
+        </div>
+        
+        <!-- Beginner Category -->
+        <div class="registration-category" id="beginner-category">
+            <h3>Cursuri pentru Începători</h3>
+            <form id="beginner-form">
+                <div class="form-group">
+                    <label for="beginner-name">Nume complet:</label>
+                    <input type="text" id="beginner-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="beginner-email">Adresă email:</label>
+                    <input type="email" id="beginner-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="beginner-phone">Telefon:</label>
+                    <input type="tel" id="beginner-phone">
+                </div>
+                <div class="form-group">
+                    <label for="beginner-course">Selectează cursul:</label>
+                    <select id="beginner-course" required>
+                        <option value="">-- Alege un curs --</option>
+                        <option value="math-basics">Bazele Matematicii</option>
+                        <option value="arithmetic">Aritmetică Practică</option>
+                        <option value="geometry-intro">Introducere în Geometrie</option>
+                    </select>
+                </div>
+                <button type="submit" class="register-btn">Înscrie-te acum</button>
+            </form>
+        </div>
+        
+        <!-- Intermediate Category -->
+        <div class="registration-category" id="intermediate-category" style="display:none">
+            <h3>Cursuri pentru Intermediari</h3>
+            <form id="intermediate-form">
+                <div class="form-group">
+                    <label for="intermediate-name">Nume complet:</label>
+                    <input type="text" id="intermediate-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="intermediate-email">Adresă email:</label>
+                    <input type="email" id="intermediate-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="intermediate-phone">Telefon:</label>
+                    <input type="tel" id="intermediate-phone">
+                </div>
+                <div class="form-group">
+                    <label for="intermediate-course">Selectează cursul:</label>
+                    <select id="intermediate-course" required>
+                        <option value="">-- Alege un curs --</option>
+                        <option value="algebra">Algebră pentru Gimnaziu</option>
+                        <option value="geometry">Geometrie Plană</option>
+                        <option value="functions">Introducere în Funcții</option>
+                    </select>
+                </div>
+                <button type="submit" class="register-btn">Înscrie-te acum</button>
+            </form>
+        </div>
+        
+        <!-- Advanced Category -->
+        <div class="registration-category" id="advanced-category" style="display:none">
+            <h3>Cursuri pentru Avansați</h3>
+            <form id="advanced-form">
+                <div class="form-group">
+                    <label for="advanced-name">Nume complet:</label>
+                    <input type="text" id="advanced-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="advanced-email">Adresă email:</label>
+                    <input type="email" id="advanced-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="advanced-phone">Telefon:</label>
+                    <input type="tel" id="advanced-phone">
+                </div>
+                <div class="form-group">
+                    <label for="advanced-course">Selectează cursul:</label>
+                    <select id="advanced-course" required>
+                        <option value="">-- Alege un curs --</option>
+                        <option value="trigonometry">Trigonometrie</option>
+                        <option value="analytical-geo">Geometrie Analitică</option>
+                        <option value="advanced-algebra">Algebră Avansată</option>
+                    </select>
+                </div>
+                <button type="submit" class="register-btn">Înscrie-te acum</button>
+            </form>
+        </div>
+        
+        <!-- Olympiad Category -->
+        <div class="registration-category" id="olympiad-category" style="display:none">
+            <h3>Pregătire pentru Olimpiade</h3>
+            <form id="olympiad-form">
+                <div class="form-group">
+                    <label for="olympiad-name">Nume complet:</label>
+                    <input type="text" id="olympiad-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="olympiad-email">Adresă email:</label>
+                    <input type="email" id="olympiad-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="olympiad-phone">Telefon:</label>
+                    <input type="tel" id="olympiad-phone">
+                </div>
+                <div class="form-group">
+                    <label for="olympiad-course">Selectează cursul:</label>
+                    <select id="olympiad-course" required>
+                        <option value="">-- Alege un curs --</option>
+                        <option value="olympiad-basics">Bazele Matematicii Olimpice</option>
+                        <option value="problem-solving">Rezolvarea Problemelor</option>
+                        <option value="competition-math">Matematică de Concurs</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="olympiad-level">Nivelul tău actual:</label>
+                    <select id="olympiad-level" required>
+                        <option value="">-- Selectează nivelul --</option>
+                        <option value="local">Local</option>
+                        <option value="county">Județean</option>
+                        <option value="national">Național</option>
+                    </select>
+                </div>
+                <button type="submit" class="register-btn">Înscrie-te acum</button>
+            </form>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>Universul matematicii te așteaptă – descoperă-l pas cu pas!</p>
+    </div>
+
+    <script>
+        // Calculator functions
+        let currentDisplay = '0';
+        
+        function updateDisplay() {
+            document.getElementById('display').textContent = currentDisplay;
+        }
+        
+        function appendToDisplay(value) {
+            if (currentDisplay === '0' && value !== '.') {
+                currentDisplay = value;
+            } else {
+                currentDisplay += value;
+            }
+            updateDisplay();
+        }
+        
+        function clearDisplay() {
+            currentDisplay = '0';
+            updateDisplay();
+        }
+        
+        function backspace() {
+            if (currentDisplay.length === 1) {
+                currentDisplay = '0';
+            } else {
+                currentDisplay = currentDisplay.slice(0, -1);
+            }
+            updateDisplay();
+        }
+        
+        function calculate() {
+            try {
+                currentDisplay = eval(currentDisplay).toString();
+                updateDisplay();
+            } catch (error) {
+                currentDisplay = 'Error';
+                updateDisplay();
+                setTimeout(clearDisplay, 1500);
+            }
+        }
+        
+        // Test checking functions
+        function checkTest1() {
+            let score = 0;
+            const answers = {
+                q1: "b", // 2x + 3x - x = 4x = 16 pentru x=4
+                q2: "c", // 3(x-2)=15 => x-2=5 => x=7
+                q3: "a"  // 2(3x-5)+4x = 6x-10+4x = 10x-10
+            };
+            
+            // Check each question
+            for (let i = 1; i <= 3; i++) {
+                const selected = document.querySelector(`input[name="q${i}"]:checked`);
+                const feedback = document.getElementById(`feedback${i}`);
+                
+                if (selected) {
+                    if (selected.value === answers[`q${i}`]) {
+                        feedback.textContent = "Corect!";
+                        feedback.className = "feedback correct";
+                        score++;
+                    } else {
+                        feedback.textContent = "Incorect. Răspunsul corect este " + getCorrectAnswerText(i, answers[`q${i}`]);
+                        feedback.className = "feedback incorrect";
+                    }
+                    feedback.style.display = "block";
+                } else {
+                    document.getElementById(`feedback${i}`).textContent = "Nu ai selectat niciun răspuns!";
+                    document.getElementById(`feedback${i}`).className = "feedback incorrect";
+                    document.getElementById(`feedback${i}`).style.display = "block";
+                }
+            }
+            
+            // Show results
+            const results = document.getElementById("results1");
+            results.textContent = `Ai obținut ${score} din 3 puncte!`;
+            results.style.display = "block";
+        }
+        
+        function checkTest2() {
+            let score = 0;
+            const answers = {
+                q4: "c", // Aria pătratului = l² = 25 cm²
+                q5: "a", // Ipotenuza = √(3²+4²) = 5 cm
+                q6: "c"  // Volum cub = l³ = 27 cm³
+            };
+            
+            for (let i = 4; i <= 6; i++) {
+                const selected = document.querySelector(`input[name="q${i}"]:checked`);
+                const feedback = document.getElementById(`feedback${i}`);
+                
+                if (selected) {
+                    if (selected.value === answers[`q${i}`]) {
+                        feedback.textContent = "Corect!";
+                        feedback.className = "feedback correct";
+                        score++;
+                    } else {
+                        feedback.textContent = "Incorect. Răspunsul corect este " + getCorrectAnswerText(i, answers[`q${i}`]);
+                        feedback.className = "feedback incorrect";
+                    }
+                    feedback.style.display = "block";
+                } else {
+                    document.getElementById(`feedback${i}`).textContent = "Nu ai selectat niciun răspuns!";
+                    document.getElementById(`feedback${i}`).className = "feedback incorrect";
+                    document.getElementById(`feedback${i}`).style.display = "block";
+                }
+            }
+            
+            const results = document.getElementById("results2");
+            results.textContent = `Ai obținut ${score} din 3 puncte!`;
+            results.style.display = "block";
+        }
+        
+        function checkTest3() {
+            let score = 0;
+            const answers = {
+                q7: "c", // 15% din 200 = 30
+                q8: "c", // CMMDC(24,36) = 12
+                q9: "a"  // 2a - b = 2*(-3) - 5 = -6-5 = -11
+            };
+            
+            for (let i = 7; i <= 9; i++) {
+                const selected = document.querySelector(`input[name="q${i}"]:checked`);
+                const feedback = document.getElementById(`feedback${i}`);
+                
+                if (selected) {
+                    if (selected.value === answers[`q${i}`]) {
+                        feedback.textContent = "Corect!";
+                        feedback.className = "feedback correct";
+                        score++;
+                    } else {
+                        feedback.textContent = "Incorect. Răspunsul corect este " + getCorrectAnswerText(i, answers[`q${i}`]);
+                        feedback.className = "feedback incorrect";
+                    }
+                    feedback.style.display = "block";
+                } else {
+                    document.getElementById(`feedback${i}`).textContent = "Nu ai selectat niciun răspuns!";
+                    document.getElementById(`feedback${i}`).className = "feedback incorrect";
+                    document.getElementById(`feedback${i}`).style.display = "block";
+                }
+            }
+            
+            const results = document.getElementById("results3");
+            results.textContent = `Ai obținut ${score} din 3 puncte!`;
+            results.style.display = "block";
+        }
+        
+        function getCorrectAnswerText(questionNum, correctLetter) {
+            const questions = {
+                1: { a: "12", b: "16", c: "20", d: "24" },
+                2: { a: "x = 3", b: "x = 5", c: "x = 7", d: "x = 9" },
+                3: { a: "10x - 10", b: "6x - 10 + 4x", c: "10x - 5", d: "6x - 5 + 4x" },
+                4: { a: "10 cm²", b: "20 cm²", c: "25 cm²", d: "30 cm²" },
+                5: { a: "5 cm", b: "6 cm", c: "7 cm", d: "8 cm" },
+                6: { a: "9 cm³", b: "18 cm³", c: "27 cm³", d: "36 cm³" },
+                7: { a: "15", b: "20", c: "30", d: "45" },
+                8: { a: "6", b: "8", c: "12", d: "24" },
+                9: { a: "-11", b: "-1", c: "1", d: "11" }
+            };
+            
+            return questions[questionNum][correctLetter];
+        }
+        
+        // Registration functions
+        function showCategory(category) {
+            // Hide all categories
+            document.getElementById('beginner-category').style.display = 'none';
+            document.getElementById('intermediate-category').style.display = 'none';
+            document.getElementById('advanced-category').style.display = 'none';
+            document.getElementById('olympiad-category').style.display = 'none';
+            
+            // Show selected category
+            document.getElementById(`${category}-category`).style.display = 'block';
+            
+            // Update active tab
+            const tabs = document.querySelectorAll('.category-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            const activeTab = document.querySelector(`.category-tab[onclick="showCategory('${category}')"]`);
+            activeTab.classList.add('active');
+        }
+        
+        // Form submission handlers
+        document.getElementById('beginner-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Înscrierea la cursul pentru începători a fost trimisă! Vă vom contacta în curând.');
+            this.reset();
+        });
+        
+        document.getElementById('intermediate-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Înscrierea la cursul intermediar a fost trimisă! Vă vom contacta în curând.');
+            this.reset();
+        });
+        
+        document.getElementById('advanced-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Înscrierea la cursul avansat a fost trimisă! Vă vom contacta în curând.');
+            this.reset();
+        });
+        
+        document.getElementById('olympiad-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Înscrierea la pregătirea pentru olimpiade a fost trimisă! Vă vom contacta în curând.');
+            this.reset();
+        });
+    </script>
+</body>
+</html>
